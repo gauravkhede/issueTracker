@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>Home Page | IssueTracker</title>
+    <link rel="stylesheet" href="/css/home-project.css">
+</head>
+<body>
+    <form action="/createProject" method="post">
+        <input type="text" name="name" required placeholder="Enter Your Project Name">
+        <input type="text" name="description" required placeholder="Enter Project Description">
+        <input type="text" name="author" required placeholder="Enter Author's name">
+        <input type="submit" name="submit" value="submit">
+    </form>
+    <% for(let project of projects ){ %>
+        name:<%= project.name %> <br>
+        description: <%= project.description %> <br>
+        author: <%= project.author %> <br> <br>
+        <form action="/project" method="post">
+            <input type="hidden" name="name" value="<%= project.name %>">
+            <input type="submit" name="submit" value="Click on project" id="project-submit">
+        </form>
+
+    <% } %>
+</body>
+</html>

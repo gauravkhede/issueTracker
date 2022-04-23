@@ -12,6 +12,10 @@ const projectSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    bugs:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Bugs',
+    }]
 
 },{
     timestamps:true,

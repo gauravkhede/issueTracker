@@ -5,6 +5,28 @@
     <title>Project</title>
 </head>
 <body>
-    <%= project_name %>
+    <%= name %>
+    <select name="filterByAuthor" id="">
+       <% for(let bug of bugs){ %>
+            <option value="<%= bug.author%>"> <%=bug.author %></option>
+        <% } %>
+    </select>
+    <form action="/createBug" method="post">
+        <input type="hidden" name="project" value="<%= name%>">
+        <input type="hidden" name="project_id" value="<%=project_id %>">
+        <input type="text" name="title" placeholder="Enter Title of bug here">
+        <input type="text" name="description" placeholder="Enter Description of bug here">
+        <input type="text" name="labels" placeholder="Enter Label here">
+        <input type="text" name="author" placeholder="Enter Author Name here">
+        <input type="submit" value="submit">
+    </form>
+    
+    <% for(let bug of bugs){ %>
+        name of bug: <%=bug.title %>, <br>
+        Description of Bug: <%= bug.description %>, <br>
+        Label of Bug: <%= bug.labels %>, <br>
+        Author of Bug: <%= bug.author %> <br> <br>
+
+        <% } %>
 </body>
 </html>

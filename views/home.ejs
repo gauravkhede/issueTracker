@@ -16,8 +16,10 @@
         name:<%= project.name %> <br>
         description: <%= project.description %> <br>
         author: <%= project.author %> <br> <br>
+        
         <form action="/project" method="post">
             <input type="hidden" name="name" value="<%= project.name %>">
+            <input type="hidden" name="project_id" value="<%= project._id%>">
             <input type="submit" name="submit" value="Click on project" id="project-submit">
         </form>
 

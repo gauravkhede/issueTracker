@@ -3,6 +3,7 @@ const express=require('express');
 const db=require('./config/mongoose');
 const Project=require('./models/project');
 const Bugs=require('./models/bugs');
+const Author=require('./models/author');
 const app=express();
 var http=require('http');
 var path=require('path');

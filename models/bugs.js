@@ -15,8 +15,8 @@ const bugsSchema=mongoose.Schema({
         required:true,
     },
     author:{
-        type:String,
-        required:true,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Author',
     },
     project:{
         type:mongoose.Schema.Types.ObjectId,

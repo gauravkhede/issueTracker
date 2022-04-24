@@ -20,12 +20,15 @@
         <input type="text" name="author" placeholder="Enter Author Name here">
         <input type="submit" value="submit">
     </form>
+    <%= console.log( author_sample,'is the sample author' )%>
     
     <% for(let bug of bugs){ %>
+        <% let bug_name='name' %>
         name of bug: <%=bug.title %>, <br>
         Description of Bug: <%= bug.description %>, <br>
         Label of Bug: <%= bug.labels %>, <br>
-        Author of Bug: <%= bug.author %> <br> <br>
+        Author of Bug: <%= bug.author%> <br> <br>
+        <% console.log(bug.author) %>
 
         <% } %>
 </body>

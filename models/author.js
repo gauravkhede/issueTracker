@@ -8,14 +8,14 @@ const authorSchema=mongoose.Schema({
         required:true,
         unique:true,
     },
-    project:{
+    project:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Project',
-    },
-    bugs:{
+    }],
+    bugs:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Bugs',
-    }
+    }]
 },{
     timestamps:true,
 });

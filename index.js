@@ -28,15 +28,53 @@ app.use('/',require('./routes'));
 //     })
 // });
 app.post('/createProject',function(req,res){
-    Project.create({
-        name:req.body.name,
-        description:req.body.description,
-        author:req.body.author,
-    },function(err,newProject){
-        if(err){ console.log('error in creating project',err); return; }
-        console.log('new Project details:',newProject);
-        return res.render('project');
+    Author.find({name:req.body.author},function(err,new_author){
+        console.log(new_author.length,' is the length of new_author');
+        if(new_author.length==0){
+            console.log('inside');
+            Author.create({
+                name:req.body.author,
+            },function(err,newAuthor){
+                if(err){ console.log('Error in Author creation',err); return; }
+                console.log(newAuthor.name,'is newAuthor')
+                Project.create({
+                    name:req.body.name,
+                    description:req.body.description,
+                    author:newAuthor._id,
+                },function(err,newProject){
+                    if(err){ console.log('error in creating project',err); return; }
+                    console.log('new Project details:',newProject);
+                    console.log(newAuthor,'is newAuthor')
+                    return res.render('project');
+                });
+ 
+            });
+
+        }
+        else{
+            console.log('new_author name',new_author[0].name);
+            Project.create({
+            name:req.body.name,
+            description:req.body.description,
+            author:new_author[0]._id,
+        },function(err,newProject){
+            if(err){ console.log('error in creating project',err); return; }
+            console.log('new Project details:',newProject);
+            new_author[0].project.push(newProject);
+            new_author[0].save();
+            return res.render('project');
+        });
+        }
     });
+    // Project.create({
+    //     name:req.body.name,
+    //     description:req.body.description,
+    //     author:req.body.author,
+    // },function(err,newProject){
+    //     if(err){ console.log('error in creating project',err); return; }
+    //     console.log('new Project details:',newProject);
+    //     return res.render('project');
+    // });
 });
 
 

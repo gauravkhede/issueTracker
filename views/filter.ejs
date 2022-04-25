@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <% let count=0 %>
+    <% for(let bug of bugs){ %>
+        <% if(bug.author.name==author_name){ %>
+        <% count++ %>
+        name of bug: <%=bug.title %>, <br>
+        Description of Bug: <%= bug.description %>, <br>
+        Label of Bug: <%= bug.labels %>, <br>
+        Author of Bug: <%= author_name%> <br> <br>
+        <% console.log(bug,' is the bug') %>
+
+        <% } %>
+        <% } %>
+    <% if(count==0){ %>
+        No Bug by Author <strong> <%= author_name %> </strong> for this Project 
+        <% } %>
+    
+</body>
+</html>

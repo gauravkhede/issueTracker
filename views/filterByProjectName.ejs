@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document</title>
+</head>
+<body>
+    
+    <% if(projects.length!=0){ %>
+    <% for(let project of projects){ %>
+        name: <%= project.name%> <br>
+        Project Description: <%= project.description %> <br>
+        Project Author: <%= project.author.name %> <br>
+        Number Of Bugs in a Project: <%=project.bugs.length%> <br> <br>
+        <% } %>
+        <% }else{%>
+            <strong>Sorry! we can't find project whose Name and Description both matches your needs.</strong>
+            <% } %>
+</body>
+</html>

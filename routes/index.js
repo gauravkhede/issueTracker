@@ -8,4 +8,5 @@ router.post('/project',homeController.projects);
 router.post('/createBug',createBugsController.createBug);
 router.get('/project',homeController.projects);
 router.post('/filter',homeController.filterPage);
+router.post('/filterByProject',homeController.filterProject);
 module.exports=router;

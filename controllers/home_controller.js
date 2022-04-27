@@ -4,7 +4,9 @@ const Project=require('../models/project');
 
 
 module.exports.home=function(req,res){
-    Project.find({},function(err,project){
+    Project.find({})
+    .populate('author')
+    .exec(function(err,project){
         if(err){ console.log('Error in fetching projects from database'); return; }
         return res.render('home',{
             title:'Through Controller | IssueTracker',
@@ -92,4 +94,44 @@ module.exports.filterPage=function(req,res){
             author_name:req.body.filterByAuthor
         })
     });
+}
+module.exports.filterProject=function(req,res){
+    if(req.body.project_description=='' && req.body.project_name!==''){
+    Project.find({name:req.body.project_name})
+    .populate('author')
+    .exec(function(err,project){
+        console.log(project);
+        return res.render('filterByProjectName',{
+            projects:project,
+        });
+    });
+    }
+    else if(req.body.name=='' && req.body.project_description!==''){
+    Project.find({description:req.body.project_description})
+    .populate('author')
+    .exec(function(err,project){
+        console.log(project);
+        return res.render('filterByProjectName',{
+            projects:project,
+        });
+    });
+    }
+    else if(req.body.name!=='' && req.body.project_description!==''){
+        Project.find({
+            "name" : { "$in": req.body.project_name },
+            "description" : { "$in": req.body.project_description }
+        })
+        .exec(function(err,project){
+            console.log(project,' findings of project description and name not being null');
+            return res.render('filterByProjectName',{
+                projects:project,
+            })
+        });
+        
+    }else{
+        return res.render('filterByProjectName',{
+            projects:[]
+        });
+    }
+    
 }

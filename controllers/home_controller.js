@@ -28,9 +28,11 @@ module.exports.projects=function(req,res){
         Project.findById(req.body.project_id)
         .populate({
             path:'bugs',
-            populate:{
+            populate:[{
                 path:'author',
-            }
+            },{
+                path:'labels',
+            }]
         })
         .populate('author')
         .exec(function(err,project){

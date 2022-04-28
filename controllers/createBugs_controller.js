@@ -2,11 +2,13 @@ const Bugs=require('../models/bugs');
 const Project=require('../models/project');
 const Author=require('../models/author');
 const { populate } = require('../models/project');
+const Label = require('../models/labels');
 
 module.exports.createBug=function(req,res){
     
     console.log(req.body.project_id,'....................................................');
     let author_id;
+    let label_id;
     
     
     Project.findById(req.body.project_id)
@@ -22,6 +24,7 @@ module.exports.createBug=function(req,res){
         Author.find({name:req.body.author})
         .populate('bugs')
         .exec(function(err,author){
+            
             if(err){ console.log('error in finding author',err); return; }
             console.log(author,'author find successfully');
             
@@ -33,11 +36,50 @@ module.exports.createBug=function(req,res){
                 },function(err,newAuthor){
                     if(err){ console.log('Error in creating an author',err); return; }
                     console.log('Author created is ',newAuthor._id);
-                    author_id=newAuthor._id;
+
+                    Label.find({labels:req.body.labels},function(err,labelsfound){
+                        if(err){ console.log('error in finding labels',err); return; }
+                        if(labelsfound.length!=0){
+                            label_id=labelsfound[0]._id;
+                        }
+                        if(labelsfound.length==0){
+                            Label.create({
+                                labels:req.body.labels,
+
+                          },function(err,newLabel){
+                              if(err){ console.log('error in creating label',err); return; }
+                              label_id=newLabel._id;
+                              author_id=newAuthor._id;
+                        Bugs.create({
+                            title:req.body.title,
+                            description:req.body.description,
+                            labels:label_id,
+                            author:author_id,
+                            project:req.body.project.id
+                        
+                        },function(err,newBug){
+                            if(err){ console.log('Error in creating a bug',err); return; }
+                        
+                                console.log('********************',newBug);
+                                console.log('finally author is',author);
+                                console.log('finally project is ',project);
+                                project.bugs.push(newBug);
+                                project.save();
+                                newAuthor.bugs.push(newBug);
+                                newAuthor.save();
+                                newLabel.bugs.push(newBug);
+                                newLabel.save();
+                                return res.redirect('/');
+                            });
+                              
+                          });
+                        }
+
+                        author_id=newAuthor._id;
                     Bugs.create({
                         title:req.body.title,
                         description:req.body.description,
-                        labels:req.body.labels,
+                        labels:label_id,
                         author:author_id,
                         project:req.body.project.id
                         
@@ -51,18 +93,54 @@ module.exports.createBug=function(req,res){
                         project.save();
                         newAuthor.bugs.push(newBug);
                         newAuthor.save();
+                        labelsfound[0].bugs.push(newBug);
+                        labelsfound[0].save();
                         return res.redirect('/');
                     });
+                        
+                    });
+                    // author_id=newAuthor._id;
+                    // Bugs.create({
+                    //     title:req.body.title,
+                    //     description:req.body.description,
+                    //     labels:label_id,
+                    //     author:author_id,
+                    //     project:req.body.project.id
+                        
+                    // },function(err,newBug){
+                    //     if(err){ console.log('Error in creating a bug',err); return; }
+                        
+                    //     console.log('********************',newBug);
+                    //     console.log('finally author is',author);
+                    //     console.log('finally project is ',project);
+                    //     project.bugs.push(newBug);
+                    //     project.save();
+                    //     newAuthor.bugs.push(newBug);
+                    //     newAuthor.save();
+                    //     return res.redirect('/');
+                    // });
 
                 });
             }
             else{
-                author_id=author[0]._id;
+                Label.find({labels:req.body.labels},function(err,labelsfound){
+                    if(err){ console.log('error in finding labels',err); return; }
+                    if(labelsfound.length!=0){
+                        label_id=labelsfound[0]._id;
+                    }
+                    if(labelsfound.length==0){
+                        Label.create({
+                            labels:req.body.labels,
+
+                      },function(err,newLabel){
+                          if(err){ console.log('error in creating label',err); return; }
+                          label_id=newLabel._id;
+                          author_id=author[0]._id;
                 console.log('author_id is ',author_id);
                 Bugs.create({
                     title:req.body.title,
                     description:req.body.description,
-                    labels:req.body.labels,
+                    labels:label_id,
                     author:author_id,
                     project:req.body.project.id
                     
@@ -76,28 +154,62 @@ module.exports.createBug=function(req,res){
                     project.save();
                     author[0].bugs.push(newBug);
                     author[0].save();
+                    newLabel.bugs.push(newBug);
+                    newLabel.save();
                     return res.redirect('/');
                 });
+                      });
+                    }
+                    label_id=labelsfound._id;
+                    author_id=author[0]._id;
+                console.log('author_id is ',author_id);
+                Bugs.create({
+                    title:req.body.title,
+                    description:req.body.description,
+                    labels:req.body.labels,
+                    author:author_id,
+                    project:req.body.project.id
+                    
+                },function(err,newBug){
+                    if(err){ console.log('Error in creating a bug',err); return; }
+                    
+                    console.log('********************',newBug);
+                    console.log('finally author is',author);
+                    console.log('finally the labelsfound us ',labelsfound);
+                    console.log('finally project is ',project);
+                    project.bugs.push(newBug);
+                    project.save();
+                    author[0].bugs.push(newBug);
+                    author[0].save();
+                    labelsfound[0].bugs.push(newBug);
+                    labelsfound[0].save();
+                    return res.redirect('/');
+                });
+
+                });
+                // author_id=author[0]._id;
+                // console.log('author_id is ',author_id);
+                // Bugs.create({
+                //     title:req.body.title,
+                //     description:req.body.description,
+                //     labels:req.body.labels,
+                //     author:author_id,
+                //     project:req.body.project.id
+                    
+                // },function(err,newBug){
+                //     if(err){ console.log('Error in creating a bug',err); return; }
+                    
+                //     console.log('********************',newBug);
+                //     console.log('finally author is',author);
+                //     console.log('finally project is ',project);
+                //     project.bugs.push(newBug);
+                //     project.save();
+                //     author[0].bugs.push(newBug);
+                //     author[0].save();
+                //     return res.redirect('/');
+                // });
             }
-            // Bugs.create({
-            //     title:req.body.title,
-            //     description:req.body.description,
-            //     labels:req.body.labels,
-            //     author:author_id,
-            //     project:req.body.project.id
-                
-            // },function(err,newBug){
-            //     if(err){ console.log('Error in creating a bug',err); return; }
-                
-            //     console.log('********************',newBug);
-            //     console.log('finally author is',author);
-            //     console.log('finally project is ',project);
-            //     project.bugs.push(newBug);
-            //     project.save();
-            //     author[0].bugs.push(newBug);
-            //     author[0].save();
-            //     return res.render('project');
-            // });
+            
         });
         
     });

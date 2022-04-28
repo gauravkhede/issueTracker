@@ -31,7 +31,7 @@
         <% let bug_name='name' %>
         name of bug: <%=bug.title %>, <br>
         Description of Bug: <%= bug.description %>, <br>
-        Label of Bug: <%= bug.labels %>, <br>
+        Label of Bug: <%= bug.labels.labels %>, <br>
         Author of Bug: <%= bug.author.name%> <br> <br>
         <% console.log(bug,' is the bug') %>
 

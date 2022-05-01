@@ -16,6 +16,10 @@ const projectSchema=new mongoose.Schema({
     bugs:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Bugs',
+    }],
+    labels:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Label'
     }]
 
 },{

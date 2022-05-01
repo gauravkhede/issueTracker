@@ -28,10 +28,13 @@
    
     
     <% for(let bug of bugs){ %>
+        <%= bug.labels %>
         <% let bug_name='name' %>
         name of bug: <%=bug.title %>, <br>
         Description of Bug: <%= bug.description %>, <br>
+        <% if(bug.labels!=null){ %>
         Label of Bug: <%= bug.labels.labels %>, <br>
+        <% } %>
         Author of Bug: <%= bug.author.name%> <br> <br>
         <% console.log(bug,' is the bug') %>
 

@@ -14,15 +14,22 @@ module.exports.createBug=function(req,res){
     Project.findById(req.body.project_id)
     .populate({
         path:'bugs',
-        populate:{
+        populate:[{
             path:'author',
-        }
+        },{
+            path:'labels'
+        }]
     })
     .exec(function(err,project){
         if(err){ console.log('Error in finding project',err); return; }
         console.log('********************',project);
         Author.find({name:req.body.author})
-        .populate('bugs')
+        .populate({
+            path:'bugs',
+            populate:{
+                path:'labels'
+            }
+        })
         .exec(function(err,author){
             
             if(err){ console.log('error in finding author',err); return; }
@@ -40,7 +47,9 @@ module.exports.createBug=function(req,res){
                     Label.find({labels:req.body.labels},function(err,labelsfound){
                         if(err){ console.log('error in finding labels',err); return; }
                         if(labelsfound.length!=0){
+                            
                             label_id=labelsfound[0]._id;
+                            console.log('newAuthor created and label_id is',label_id);
                         }
                         if(labelsfound.length==0){
                             Label.create({
@@ -49,6 +58,8 @@ module.exports.createBug=function(req,res){
                           },function(err,newLabel){
                               if(err){ console.log('error in creating label',err); return; }
                               label_id=newLabel._id;
+                              project.labels.push(newLabel);
+                              project.save();
                               author_id=newAuthor._id;
                         Bugs.create({
                             title:req.body.title,
@@ -127,6 +138,7 @@ module.exports.createBug=function(req,res){
                     if(err){ console.log('error in finding labels',err); return; }
                     if(labelsfound.length!=0){
                         label_id=labelsfound[0]._id;
+                        console.log('author already present and label also already present so label_id is',label_id);
                     }
                     if(labelsfound.length==0){
                         Label.create({
@@ -135,6 +147,8 @@ module.exports.createBug=function(req,res){
                       },function(err,newLabel){
                           if(err){ console.log('error in creating label',err); return; }
                           label_id=newLabel._id;
+                        //   project.labels.push(newLabel);
+                        //   project.save();
                           author_id=author[0]._id;
                 console.log('author_id is ',author_id);
                 Bugs.create({
@@ -166,7 +180,7 @@ module.exports.createBug=function(req,res){
                 Bugs.create({
                     title:req.body.title,
                     description:req.body.description,
-                    labels:req.body.labels,
+                    labels:label_id,
                     author:author_id,
                     project:req.body.project.id
                     

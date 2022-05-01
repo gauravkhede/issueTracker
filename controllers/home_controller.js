@@ -6,6 +6,12 @@ const Project=require('../models/project');
 module.exports.home=function(req,res){
     Project.find({})
     .populate('author')
+    .populate({
+        path:'bugs',
+        populate:{
+            path:'labels',
+        }
+    })
     .exec(function(err,project){
         if(err){ console.log('Error in fetching projects from database'); return; }
         return res.render('home',{
@@ -29,16 +35,18 @@ module.exports.projects=function(req,res){
         .populate({
             path:'bugs',
             populate:[{
-                path:'author',
-            },{
                 path:'labels',
+            },{
+                path:'author',
             }]
         })
+        
         .populate('author')
         .exec(function(err,project){
             // console.log(project.bugs[0].title,' is the project');
             Author.find({},function(err,allAuthors){
                 if(err){ console.log('error in finding all authors for filtering',err); return; }
+                console.log('all project bugs are:',project.bugs);
                 return res.render('project',{
                     name:project.name,
                     project_id:req.body.project_id,

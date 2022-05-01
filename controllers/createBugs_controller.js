@@ -46,6 +46,7 @@ module.exports.createBug=function(req,res){
 
                     Label.find({labels:req.body.labels},function(err,labelsfound){
                         if(err){ console.log('error in finding labels',err); return; }
+                        console.log('labelsfound.length is',labelsfound.length);
                         if(labelsfound.length!=0){
                             
                             label_id=labelsfound[0]._id;
@@ -59,8 +60,9 @@ module.exports.createBug=function(req,res){
                               if(err){ console.log('error in creating label',err); return; }
                               label_id=newLabel._id;
                               project.labels.push(newLabel);
-                              project.save();
+                            //   project.save();
                               author_id=newAuthor._id;
+                              console.log('................................................',label_id);
                         Bugs.create({
                             title:req.body.title,
                             description:req.body.description,
@@ -80,11 +82,14 @@ module.exports.createBug=function(req,res){
                                 newAuthor.save();
                                 newLabel.bugs.push(newBug);
                                 newLabel.save();
+                                // newBug.labels.push(newLabel);
+                                // newBug.save();
                                 return res.redirect('/');
                             });
                               
                           });
                         }
+                        else{
 
                         author_id=newAuthor._id;
                     Bugs.create({
@@ -96,7 +101,7 @@ module.exports.createBug=function(req,res){
                         
                     },function(err,newBug){
                         if(err){ console.log('Error in creating a bug',err); return; }
-                        
+                        console.log('finally labels found is',labelsfound[0])
                         console.log('********************',newBug);
                         console.log('finally author is',author);
                         console.log('finally project is ',project);
@@ -108,6 +113,7 @@ module.exports.createBug=function(req,res){
                         labelsfound[0].save();
                         return res.redirect('/');
                     });
+                                }
                         
                     });
                     // author_id=newAuthor._id;
@@ -174,6 +180,7 @@ module.exports.createBug=function(req,res){
                 });
                       });
                     }
+                    else{
                     label_id=labelsfound._id;
                     author_id=author[0]._id;
                 console.log('author_id is ',author_id);
@@ -199,6 +206,7 @@ module.exports.createBug=function(req,res){
                     labelsfound[0].save();
                     return res.redirect('/');
                 });
+                            }
 
                 });
                 // author_id=author[0]._id;

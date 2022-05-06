@@ -1,23 +1,31 @@
 const Author = require('../models/author');
 const Bugs = require('../models/bugs');
+const Label = require('../models/labels');
 const Project=require('../models/project');
 
 
 module.exports.home=function(req,res){
     Project.find({})
     .populate('author')
+    .populate('labels')
     .populate({
         path:'bugs',
-        populate:{
+        populate:[{
             path:'labels',
-        }
+        },{
+            path:'author',
+        }]
     })
     .exec(function(err,project){
-        if(err){ console.log('Error in fetching projects from database'); return; }
-        return res.render('home',{
-            title:'Through Controller | IssueTracker',
-            projects:project,
-        });
+        Label.find({},function(err,allLabels){
+            if(err){ console.log('Error in fetching projects from database'); return; }
+            return res.render('home',{
+                    title:'Through Controller | IssueTracker',
+                    projects:project,
+                    labels:allLabels
+                });
+        })
+        
     });
     
 }
@@ -89,6 +97,15 @@ module.exports.filter=function(req,res){
         })
     })
 }
+module.exports.filterProjectByAuthor=function(req,res){
+        Author.findById(req.body.project_author)
+        .populate('project')
+        .exec(function(err,project_author){
+        return res.render('filterByProjectName',{
+            projects:project_author.project
+        })
+    })
+}
 module.exports.filterPage=function(req,res){
     Project.find({_id:req.body.project_id},{bug:1})
     .populate({
@@ -143,5 +160,66 @@ module.exports.filterProject=function(req,res){
             projects:[]
         });
     }
+    
+}
+module.exports.multipleFilter=function(req,res){
+   console.log('project_bug',req.body.project_bug);
+   Project.find({})
+   .populate({
+    path:'bugs',
+    populate:{
+        path:'author',
+    }
+        })
+    .populate('labels')
+    .exec(function(err,allProjects){
+        if(err){ console.log('error in finding projects',err); return; }
+        // console.log(allProjects[0],' is the allprojects[0]');
+        
+        let projectArray=[];
+        for(let p of allProjects){
+        let b=false;
+        let l=false;
+        for(let bug of p.bugs){
+            if(bug.author.name==req.body.project_bugAuthor){
+                console.log('Alankrit and bug title is',bug.title);
+            }
+            if(bug.title==req.body.project_bug && bug.author.name==req.body.project_bugAuthor){
+                b=true;
+                console.log('b toh true hai');
+                console.log('bhaiyya b hai',b);
+            for(let label of p.labels){
+                console.log(label.labels,' is the label');
+                if(b==true){
+                    console.log('label.labels is',label.labels);
+                    }
+                if(label.labels==req.body.project_label){
+                    l=true;
+                    }
+             }
+            }
+        }
+        // console.log('bhaiyya b hai',b);
+        // for(let label of p.labels){
+        //     console.log(label.labels,' is the label');
+        //     if(b==true){
+        //         console.log('label.labels is',label.labels);
+        //     }
+        //     if(label.labels==req.body.project_label){
+        //         l=true;
+        //     }
+        // }
+       
+        if(b==true && l==true){
+            projectArray.push(p);
+        }
+        
+    }
+    console.log(projectArray,' is the projectArray');
+    return res.render('filterByProjectName',{
+        projects:projectArray
+    });
+
+   })
     
 }

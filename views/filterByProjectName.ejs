@@ -9,9 +9,18 @@
     <% for(let project of projects){ %>
         name: <%= project.name%> <br>
         Project Description: <%= project.description %> <br>
+        <% if(project.author.name){%>
         Project Author: <%= project.author.name %> <br>
-        Number Of Bugs in a Project: <%=project.bugs.length%> <br> <br>
         <% } %>
+        Number Of Bugs in a Project: <%=project.bugs.length%> <br> <br>
+        <form action="/project" method="post">
+            <input type="hidden" name="name" value="<%= project.name %>">
+            <input type="hidden" name="project_id" value="<%= project._id%>">
+            <input type="submit" name="submit" value="Click on project" id="project-submit">
+        </form>
+
+        <% } %>
+        
         <% }else{%>
             <strong>Sorry! we can't find project whose Name and Description both matches your needs.</strong>
             <% } %>

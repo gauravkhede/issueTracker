@@ -80,6 +80,8 @@ module.exports.createBug=function(req,res){
                                 project.save();
                                 newAuthor.bugs.push(newBug);
                                 newAuthor.save();
+                                newLabel.project.push(project);
+                                newLabel.author.push(newAuthor);
                                 newLabel.bugs.push(newBug);
                                 newLabel.save();
                                 // newBug.labels.push(newLabel);
@@ -106,9 +108,12 @@ module.exports.createBug=function(req,res){
                         console.log('finally author is',author);
                         console.log('finally project is ',project);
                         project.bugs.push(newBug);
+                        project.labels.push(labelsfound[0]);
                         project.save();
                         newAuthor.bugs.push(newBug);
                         newAuthor.save();
+                        labelsfound[0].project.push(project);
+                        labelsfound[0].author.push(newAuthor);
                         labelsfound[0].bugs.push(newBug);
                         labelsfound[0].save();
                         return res.redirect('/');
@@ -174,6 +179,8 @@ module.exports.createBug=function(req,res){
                     project.save();
                     author[0].bugs.push(newBug);
                     author[0].save();
+                    newLabel.author.push(author[0]);
+                    newLabel.project.push(project);
                     newLabel.bugs.push(newBug);
                     newLabel.save();
                     return res.redirect('/');
@@ -181,7 +188,7 @@ module.exports.createBug=function(req,res){
                       });
                     }
                     else{
-                    label_id=labelsfound._id;
+                    label_id=labelsfound[0]._id;
                     author_id=author[0]._id;
                 console.log('author_id is ',author_id);
                 Bugs.create({
@@ -199,9 +206,12 @@ module.exports.createBug=function(req,res){
                     console.log('finally the labelsfound us ',labelsfound);
                     console.log('finally project is ',project);
                     project.bugs.push(newBug);
+                    project.labels.push(labelsfound[0]);
                     project.save();
                     author[0].bugs.push(newBug);
                     author[0].save();
+                    labelsfound[0].project.push(project);
+                    labelsfound[0].author.push(author[0]);
                     labelsfound[0].bugs.push(newBug);
                     labelsfound[0].save();
                     return res.redirect('/');

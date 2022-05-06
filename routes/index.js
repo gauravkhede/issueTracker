@@ -9,7 +9,9 @@ router.post('/project',homeController.projects);
 router.post('/createBug',createBugsController.createBug);
 router.get('/project',homeController.projects);
 router.post('/filter',homeController.filterPage);
+router.post('/filterByProjectAuthor',homeController.filterProjectByAuthor);
 router.post('/filterByProject',homeController.filterProject);
+router.post('/multipleFilter',homeController.multipleFilter);
 router.get('/autocomplete/',function(req,res,next){
     var regex=new RegExp(req.query['term'],'i');
     var labelFilter=Label.find({labels:regex},{'labels':1}).sort({'updatedAt':-1}).sort({'createdAt':-1}).limit(20);

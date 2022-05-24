@@ -1,3 +1,6 @@
+body{
+    background-color: #F9F3E7;
+}
 #project-submit{
     background:none;
     border:none;
@@ -5,4 +8,51 @@
     font-size: 1em;
     cursor: pointer;
 
+}
+#project-submit:hover{
+    color:white;
+}
+.listOfBugsContainer{
+    margin-top: 3rem;
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.heading h2{
+    display:inline-block;
+}
+.leftthirtypercent{
+    margin-left:30%;
+}
+.createBugContainer{
+    margin-top:2rem;
+    padding-top:0.4rem;
+    padding-left:1.7%;
+    width:35%;
+    
+}
+.createBugContainer h2{
+    display: inline-block;
+}
+#headingOfCreateBug{
+    margin-left:25%;    
+}
+/* allign inputs of create Bug section  */
+#titleOfBug{
+    margin-left:4rem;
+}
+#descriptionOfBug{
+    margin-left:0.4rem;
+}
+#searchLabel{
+    margin-left:1.4rem;
+}
+#authorOfBug{
+    margin-left:1.4rem;
+}
+#createBugSubmitButton{
+    margin-left:9.5rem;
+}
+#listOfAllBugsHeading{
+    margin-left:41%;
 }

@@ -4,78 +4,101 @@
     
     <title>Home Page | IssueTracker</title>
     <link rel="stylesheet" href="/css/home-project.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
 </head>
 <body>
-    hi
+    <div id="body">
+        <div class="heading"> <h1><span class="iconify" data-icon="simple-icons:pivotaltracker"></span> WelCome to IssueTracker <span class="iconify" data-icon="simple-icons:pivotaltracker"></span> </h1></div>
+    <!-- creating filter section where single filter, Multiple Filter and Search Box available to search -->
+    <div class="filterContainer">
+    <div id="filterAuthorContainer">
+    <!-- form for single filter -->
     <form action="/filterByProjectAuthor" method="post">
-        <select name="project_author" id="">
+        <h3>Single Filter</h3>
+        <span class="labelsHeading">Filter Using Author Name:</span><select name="project_author" id="">
         <% for(let p of projects){ %>
             <option value="<%= p.author._id %>"><%= p.author.name %></option>
         <% } %>
-    </select>
-    <input type="submit" value="submit">
+    </select> <br> <br>
+    <input type="submit" value="submit" class="submitButton" id="singleFilterSubmitButton">
     </form>
+    </div>
+    <!-- form for multiple filters  -->
+    <div id="multipleFilter">
     <form action="/multipleFilter" method="post">
-        Label of the Bug: 
-        <select name="project_label" id="">
+        <span class="labelsHeading"> Label of the Bug: </span> 
+        <select name="project_label" id="project_label">
         <% for(let l of labels){ %>
             <option value="<%= l.labels %>"><%= l.labels %></option>
         <% } %>
-        </select>
-        Author of the Bug:
-        <select name="project_bugAuthor" id="">
+        </select> <br> <br>
+        <span class="labelsHeading">Author of the Bug: </span>
+        <select name="project_bugAuthor" id="project_bugAuthor">
             <% for(let p of projects){ %>
                 <% for(let b of p.bugs){ %>
                 <option value="<%= b.author.name%>"> <%= b.author.name%></option>
                 <% } %>
                 <% } %>
-        </select>
-        title of the bug:
-        <select name="project_bug" id="">
+        </select> <br> <br>
+        <span class="labelsHeading">title of the bug: </span>
+        <select name="project_bug" id="project_bug">
             <% for(let p of projects){%>
                 <% for(let b of p.bugs){ %>
                 <option value="<%= b.title %>"> <%= b.title %></option>
                 <% } %>
                  
                 <% } %>
-        </select>
-    <input type="submit" value="submit">
+        </select> <br> <br>
+    <input type="submit" value="submit" class="submitButton" id="multipleFilterSubmitButton">
     </form>
+    </div>
+    <!-- creating a form for searching a project by giving name and project decription  -->
+    <div id="searchProject">
     <form action="/filterByProject" method="post">
-        Search By Project name:
+        <span class="labelsHeading">Search By Project name: </span>
         <!-- <select name="project_name" id="">
         <% for(let project of projects){ %>
                 <option value="<%=project.name %>"><%= project.name %> </option>
         
             <% } %>
         </select> -->
-        <input type="text" name="project_name">
-        Search By Project Description:
-        <input type="text" name="project_description">
-        <input type="submit" value="submit">
+        <input type="text" name="project_name" id="project_name"> <br> <br>
+        <span class="labelsHeading">Search By Project Description: </span>
+        <input type="text" name="project_description"> <br> <br>
+        <input type="submit" value="submit" class="submitButton" id="searchProjectSubmit">
 
         
     </form>
-    
-   
+    </div>
+    </div>
+     <!-- Create project division -->
+     <div class="createProjectHeading"><span class="iconify" data-icon="wpf:create-new" style="font-size: 25px;"></span><h3>  Create New Project</h3></div>
+    <div  class="createProjectContainer">
     <form action="/createProject" method="post">
-        <input type="text" name="name" required placeholder="Enter Your Project Name">
-        <input type="text" name="description" required placeholder="Enter Project Description">
-        <input type="text" name="author" required placeholder="Enter Author's name">
-        <input type="submit" name="submit" value="submit">
+        <span class="labelsHeading paddingLeftClass">Enter New Project Name:</span> <input type="text" name="name" required placeholder="Enter Your Project Name" id="nameInput"> <br> <br>
+        <span class="labelsHeading paddingLeftClass">Enter New Project's Description: </span><input type="text" name="description" required placeholder="Enter Project Description" id="descriptionInput"> <br> <br>
+        <span class="labelsHeading paddingLeftClass">Project is Assigned to: </span><input type="text" name="author" required placeholder="Enter Author's name" id="authorInput"> <br> <br>
+        <input type="submit" name="submit" value="submit" class="submitButton" id="createProjectSubmitButton">
     </form>
+    </div>
+     <!-- all the information about all the projects are displayed here -->
+     <div class="projectHeading"> <span class="iconify" data-icon="eos-icons:project" style="font-size: 25px;"></span> <h3> All Projects List</h3></div>
+     <div class="listOfProjectsContainer">
     <% for(let project of projects ){ %>
-        name:<%= project.name %> <br>
-        description: <%= project.description %> <br>
-        author: <%= project.author.name %> <br> <br>
-
-        
+        <div class="projectDisplayClass">
+        <span class="labelsHeading">name:</span><%= project.name %> <br> <hr>
+        <span class="labelsHeading" id="projectDisplayDescription">description:</span> <%= project.description %> <br> <hr>
+        <span class="labelsHeading" id="projectDisplayAuthor">author:</span> <%= project.author.name %> <hr> <br>
         <form action="/project" method="post">
             <input type="hidden" name="name" value="<%= project.name %>">
             <input type="hidden" name="project_id" value="<%= project._id%>">
             <input type="submit" name="submit" value="Click on project" id="project-submit">
         </form>
+        </div>
 
     <% } %>
+     </div>
+    </div>
 </body>
 </html>

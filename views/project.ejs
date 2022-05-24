@@ -3,46 +3,57 @@
 <head>
     
     <title>Project</title>
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/css/home-project.css">
+  <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
-    <%= name %>
-   
+    <div class="heading"><h1><span class="iconify" data-icon="eos-icons:project" style="font-size: 26px;"></span> Project Name: <%= name %> </h1> </div>
+    <!-- Creating form for filter  -->
     <form action="/filter" method="post">
-    <select name="filterByAuthor" id="">
+       <span class="labelsHeading leftthirtypercent">Filter Using Bug Author Name: &nbsp;</span><select name="filterByAuthor" id="">
        <% for(let auth of all_Authors){ %>
-            <option value="<%= auth.name%>"> <%=auth.name %></option>
+        <option value="<%= auth.name%>"> <%=auth.name %></option>
         <% } %>
     </select>
     <input type="hidden" name="project_id" value="<%=project_id%>">
-    <input type="submit" value="submit">
+    <input type="submit" value="submit" class="submitButton">
     </form>
+    <!-- creating form to create a bug  -->
+    <div class="createBugContainer leftthirtypercent">
+        <div class="heading" id="headingOfCreateBug"><span class="iconify" data-icon="cil:bug"></span> <h2>Create New Bug</h2></div>
     <form action="/createBug" method="post">
-        <input type="hidden" name="project" value="<%= name%>">
-        <input type="hidden" name="project_id" value="<%=project_id %>">
-        <input type="text" name="title" placeholder="Enter Title of bug here">
-        <input type="text" name="description" placeholder="Enter Description of bug here">
-        <input type="text" name="labels" id="searchLabel" placeholder="Enter Label here">
-        <input type="text" name="author" placeholder="Enter Author Name here">
-        <input type="submit" value="submit">
+        <input type="hidden" name="project" value="<%= name%>" > 
+        <input type="hidden" name="project_id" value="<%=project_id %>" > 
+        <span class="labelsHeading">Enter new Bug Title:</span> <input type="text" name="title" placeholder="Enter Title of bug here" id="titleOfBug">  <br> <hr>
+        <span class="labelsHeading">Enter Description of this Bug:</span><input type="text" name="description" placeholder="Enter Description of bug here" id="descriptionOfBug" > <br> <hr>
+        <span class="labelsHeading">Attach a Label to new Bug:</span><input type="text" name="labels" id="searchLabel" placeholder="Enter Label here" > <br> <hr>
+        <span class="labelsHeading">Assign New Bug to Author:</span><input type="text" name="author" placeholder="Enter Author Name here" id="authorOfBug"> <hr>
+        <input type="submit" value="submit" class="submitButton" id="createBugSubmitButton"> 
     </form>
+    </div>
    
-    
+    <!-- showing all bugs related to this project  -->
+    <div class="heading" id="listOfAllBugsHeading"><span class="iconify" data-icon="icon-park:bug"></span> &nbsp;<h2> List of All Bugs </h2></div>
+    <div class="listOfBugsContainer">
     <% for(let bug of bugs){ %>
-        
+        <div class="projectDisplayClass">
         <% let bug_name='name' %>
-        name of bug: <%=bug.title %>, <br>
-        Description of Bug: <%= bug.description %>, <br>
+        <span class="labelsHeading">name of bug:</span> <%=bug.title %>, <br> <hr>
+        <span class="labelsHeading">Description of Bug:</span> <%= bug.description %>, <br> <hr>
         <% if(bug.labels!=null){ %>
-        Label of Bug: <%= bug.labels.labels %>, <br>
+        <span class="labelsHeading">Label of Bug:</span> <%= bug.labels.labels %>, <br> <hr>
         <% } %>
-        Author of Bug: <%= bug.author.name%> <br> <br>
+        <span class="labelsHeading">Author of Bug:</span> <%= bug.author.name%> <br> <br>
         <% console.log(bug,' is the bug') %>
-
+        </div>
         <% } %>
 
+    </div>
+        <!-- script of autocomplete in search box using ajax  -->
         <script>
             $(function(){
                $('#searchLabel').autocomplete({

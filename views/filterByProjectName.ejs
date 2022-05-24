@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="/css/home.css">
     <title>Document</title>
 </head>
 <body>
-    
+    <!-- Filtered projects are displayed here if any, if not, A message is thrown to user  -->
     <% if(projects.length!=0){ %>
+    <div class="listOfProjectsContainer">
     <% for(let project of projects){ %>
-        name: <%= project.name%> <br>
-        Project Description: <%= project.description %> <br>
+        <div class="projectDisplayClass">
+        <span class="labelsHeading">name: </span><%= project.name%> <br>
+        <span class="labelsHeading">Project Description:</span> <%= project.description %> <br>
         <% if(project.author.name){%>
-        Project Author: <%= project.author.name %> <br>
+        <span class="labelsHeading">Project Author:</span> <%= project.author.name %> <br>
+        </div>
         <% } %>
-        Number Of Bugs in a Project: <%=project.bugs.length%> <br> <br>
+        <span class="labelsHeading">Number Of Bugs in a Project:</span> <%=project.bugs.length%> <br> <br>
         <form action="/project" method="post">
             <input type="hidden" name="name" value="<%= project.name %>">
             <input type="hidden" name="project_id" value="<%= project._id%>">
-            <input type="submit" name="submit" value="Click on project" id="project-submit">
+            <input type="submit" name="submit" value="Click on project" class="submitButton increaseButtonLength" id="project-submit">
         </form>
+        </div>
 
         <% } %>
-        
+        <!-- if there is no filtered project found show this  -->
         <% }else{%>
             <strong>Sorry! we can't find project whose Name and Description both matches your needs.</strong>
             <% } %>

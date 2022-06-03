@@ -45,7 +45,7 @@ app.post('/createProject',function(req,res){
                     if(err){ console.log('error in creating project',err); return; }
                     console.log('new Project details:',newProject);
                     console.log(newAuthor,'is newAuthor')
-                    return res.render('project');
+                    return res.redirect('back');
                 });
  
             });
@@ -62,7 +62,7 @@ app.post('/createProject',function(req,res){
             console.log('new Project details:',newProject);
             new_author[0].project.push(newProject);
             new_author[0].save();
-            return res.render('project');
+            return res.redirect('back');
         });
         }
     });

@@ -63,13 +63,7 @@ module.exports.projects=function(req,res){
                     
                 });
             })
-            // return res.render('project',{
-            //     name:project.name,
-            //     project_id:req.body.project_id,
-            //     bugs:project.bugs,
-            //     author_sample:project.bugs.author
-                
-            // });
+            
             
         });
         
@@ -199,16 +193,7 @@ module.exports.multipleFilter=function(req,res){
              }
             }
         }
-        // console.log('bhaiyya b hai',b);
-        // for(let label of p.labels){
-        //     console.log(label.labels,' is the label');
-        //     if(b==true){
-        //         console.log('label.labels is',label.labels);
-        //     }
-        //     if(label.labels==req.body.project_label){
-        //         l=true;
-        //     }
-        // }
+        
        
         if(b==true && l==true){
             projectArray.push(p);

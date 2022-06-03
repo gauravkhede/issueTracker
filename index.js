@@ -43,6 +43,9 @@ app.post('/createProject',function(req,res){
                     if(err){ console.log('error in creating project',err); return; }
                     console.log('new Project details:',newProject);
                     console.log(newAuthor,'is newAuthor')
+                    newAuthor.project.push(newProject);
+                    newAuthor.save();
+
                     return res.redirect('back');
                 });
  

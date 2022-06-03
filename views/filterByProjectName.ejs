@@ -14,8 +14,9 @@
         <span class="labelsHeading">Project Description:</span> <%= project.description %> <br>
         <% if(project.author.name){%>
         <span class="labelsHeading">Project Author:</span> <%= project.author.name %> <br>
-        </div>
+        
         <% } %>
+        
         <span class="labelsHeading">Number Of Bugs in a Project:</span> <%=project.bugs.length%> <br> <br>
         <form action="/project" method="post">
             <input type="hidden" name="name" value="<%= project.name %>">
@@ -25,6 +26,7 @@
         </div>
 
         <% } %>
+    </div>
         <!-- if there is no filtered project found show this  -->
         <% }else{%>
             <strong>Sorry! we can't find project whose Name and Description both matches your needs.</strong>

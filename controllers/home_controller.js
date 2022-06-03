@@ -98,6 +98,7 @@ module.exports.filterProjectByAuthor=function(req,res){
         Author.findById(req.body.project_author)
         .populate('project')
         .exec(function(err,project_author){
+            // console.log(project_author,' is the author of the project');
         return res.render('filterByProjectName',{
             projects:project_author.project
         })
@@ -121,8 +122,9 @@ module.exports.filterPage=function(req,res){
 }
 //  To search a project by its name and it's description 
 module.exports.filterProject=function(req,res){
+    
     if(req.body.project_description=='' && req.body.project_name!==''){
-    // if projects description and name is not empty linear search to all projects using requested name 
+    // if projects description is empty and name is not empty linear search to all projects using requested name 
     Project.find({name:req.body.project_name})
     .populate('author')
     .exec(function(err,project){
@@ -132,12 +134,13 @@ module.exports.filterProject=function(req,res){
         });
     });
     }
-    else if(req.body.name=='' && req.body.project_description!==''){
+    else if(req.body.project_name=='' && req.body.project_description!==''){
     // if project name is null and we just have to search via project description only 
+    
     Project.find({description:req.body.project_description})
     .populate('author')
     .exec(function(err,project){
-        console.log(project);
+        
         return res.render('filterByProjectName',{
             projects:project,
         });

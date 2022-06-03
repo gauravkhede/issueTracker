@@ -166,6 +166,7 @@ module.exports.createBug=function(req,res){
                     console.log('finally author is',author);
                     console.log('finally project is ',project);
                     project.bugs.push(newBug);
+                    project.labels.push(newLabel);
                     project.save();
                     author[0].bugs.push(newBug);
                     author[0].save();

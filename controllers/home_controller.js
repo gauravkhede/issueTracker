@@ -201,10 +201,11 @@ module.exports.multipleFilter=function(req,res){
                 // if we have found the bug with the bug title in our project than set b as true 
                 b=true;
                 console.log('b is true');
+                console.log(p,' is the project');
                 if(p.labels.length==0){
                     continue;
                 }
-                console.log(p,' is the project')
+                console.log(p,' is the project');
             // searh for all the labels in that particular project 
             for(let label of p.labels){
                 console.log(label.labels,' is the label');

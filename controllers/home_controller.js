@@ -3,8 +3,9 @@ const Bugs = require('../models/bugs');
 const Label = require('../models/labels');
 const Project=require('../models/project');
 
-
+//  To render home page of our issueTracker 
 module.exports.home=function(req,res){
+    // find all projects 
     Project.find({})
     .populate('author')
     .populate('labels')
@@ -17,8 +18,9 @@ module.exports.home=function(req,res){
         }]
     })
     .exec(function(err,project){
+        // find all labels from labels schema 
         Label.find({},function(err,allLabels){
-            if(err){ console.log('Error in fetching projects from database'); return; }
+            if(err){ console.log('Error in fetching labels from database'); return; }
             return res.render('home',{
                     title:'Through Controller | IssueTracker',
                     projects:project,
@@ -29,16 +31,14 @@ module.exports.home=function(req,res){
     });
     
 }
-module.exports.projectFilter=function(req,res){
-    console.log(req.body);
-}
+
 
 module.exports.projects=function(req,res){
 
        
     
-        console.log(req.body);
-        
+        // console.log(req.body);
+        // we will find request project through its id 
         Project.findById(req.body.project_id)
         .populate({
             path:'bugs',
@@ -51,7 +51,8 @@ module.exports.projects=function(req,res){
         
         .populate('author')
         .exec(function(err,project){
-            // console.log(project.bugs[0].title,' is the project');
+            
+            // we will find all authors and send it to project.ejs page 
             Author.find({},function(err,allAuthors){
                 if(err){ console.log('error in finding all authors for filtering',err); return; }
                 console.log('all project bugs are:',project.bugs);
@@ -72,13 +73,15 @@ module.exports.projects=function(req,res){
 }
 
 module.exports.filter=function(req,res){
-    console.log(req.body.filterByAuthor,'is the filterByAuthor value');
-    console.log(req.body.project_id,' is the project id');
+    // console.log(req.body.filterByAuthor,'is the filterByAuthor value');
+    // console.log(req.body.project_id,' is the project id');
+
     Author.find({name:req.body.filterByAuthor}, {project:1})
     .populate('project')
     .exec(function(err,project){
         console.log(project[0].project[0].name,'is the finding of the project');
     });
+    // filter our page by author name so we will find author then throw it to result page that this all projects belong to this author 
     Author.find({name:req.body.filterByAuthor})
     .populate('bugs')
     .exec(function(err,author){
@@ -116,8 +119,10 @@ module.exports.filterPage=function(req,res){
         })
     });
 }
+//  To search a project by its name and it's description 
 module.exports.filterProject=function(req,res){
     if(req.body.project_description=='' && req.body.project_name!==''){
+    // if projects description and name is not empty linear search to all projects using requested name 
     Project.find({name:req.body.project_name})
     .populate('author')
     .exec(function(err,project){
@@ -128,6 +133,7 @@ module.exports.filterProject=function(req,res){
     });
     }
     else if(req.body.name=='' && req.body.project_description!==''){
+    // if project name is null and we just have to search via project description only 
     Project.find({description:req.body.project_description})
     .populate('author')
     .exec(function(err,project){
@@ -138,6 +144,7 @@ module.exports.filterProject=function(req,res){
     });
     }
     else if(req.body.name!=='' && req.body.project_description!==''){
+    //  if we have both requested name and description then we have to search Project with both conditions 
         Project.find({
             "name" : { "$in": req.body.project_name },
             "description" : { "$in": req.body.project_description }
@@ -156,8 +163,10 @@ module.exports.filterProject=function(req,res){
     }
     
 }
+// to create a function for this.multipleFilter functionality 
 module.exports.multipleFilter=function(req,res){
    console.log('project_bug',req.body.project_bug);
+//    find all projects 
    Project.find({})
    .populate({
     path:'bugs',
@@ -171,22 +180,36 @@ module.exports.multipleFilter=function(req,res){
         // console.log(allProjects[0],' is the allprojects[0]');
         
         let projectArray=[];
+        // lets take projects one by one 
         for(let p of allProjects){
+        // variable b refers that bug having requested bug title found and then under this bugs we will be searching for labels
         let b=false;
+        // if we found a required bug with bug title then under that bug we will look for required label if found than we return
         let l=false;
+        //let's go for linear search in bugs of that particular project
         for(let bug of p.bugs){
             if(bug.author.name==req.body.project_bugAuthor){
-                console.log('Alankrit and bug title is',bug.title);
+                console.log(req.body.project_bug,' and bug title is',bug.title);
+                console.log(req.body.project_bugAuthor,' and bug title is',bug.author.name);
+
             }
+            
             if(bug.title==req.body.project_bug && bug.author.name==req.body.project_bugAuthor){
+                // if we have found the bug with the bug title in our project than set b as true 
                 b=true;
-                console.log('b toh true hai');
-                console.log('bhaiyya b hai',b);
+                console.log('b is true');
+                if(p.labels.length==0){
+                    continue;
+                }
+                console.log(p,' is the project')
+            // searh for all the labels in that particular project 
             for(let label of p.labels){
                 console.log(label.labels,' is the label');
+                // if we have found the bug with required bug title than only we are looking for labels 
                 if(b==true){
                     console.log('label.labels is',label.labels);
                     }
+                    console.log(label.labels,' is equal to',req.body.project_label);
                 if(label.labels==req.body.project_label){
                     l=true;
                     }
@@ -194,7 +217,7 @@ module.exports.multipleFilter=function(req,res){
             }
         }
         
-       
+    //    if both the bug title and label matches than we are good to throw this project in result 
         if(b==true && l==true){
             projectArray.push(p);
         }
